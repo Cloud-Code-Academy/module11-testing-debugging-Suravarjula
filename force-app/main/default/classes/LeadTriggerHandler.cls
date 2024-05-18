@@ -125,7 +125,7 @@ public with sharing class LeadTriggerHandler {
 		LeadStatus convertStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted = TRUE LIMIT 1];
 		for (Id leadId : leadToEmailMap.keySet()) {
             String leadEmail = leadToEmailMap.get(leadId);
-			if (emailToContactMap.containsKey(leadEmail)) {
+			if (emailToContactMap.containsKey(leadEmail) && !([SELECT IsConverted from Lead where Id = :leadId].IsConverted)) {
 				Database.LeadConvert lc = new Database.LeadConvert();
 				lc.setLeadId(leadId);
 				lc.setContactId(emailToContactMap.get(leadEmail).Id); // Use existing Contact Id
